@@ -13,4 +13,8 @@ Installation
 > - gulp watch
 
 
-In a browser, visit http://localhost:9000/
+Demo
+-------------
+[Demo][DemoLink]
+
+[DemoLink]: http://csaloio.github.io/cs-ctrl/
