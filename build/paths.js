@@ -7,5 +7,7 @@ module.exports =
     img    : [srcRoot + '**/*.png', srcRoot + '**/*.jpg', srcRoot + '**/*.svg'],
     html   : srcRoot + '**/*.html',
     style  : srcRoot + '**/*.scss',
+    deploy : ['./dist/**/*'],
+    clean  : ['./dist/**/*', '!./dist/jspm_packages/**/*', '!./dist/config.js'],
     output : 'dist/'
 };

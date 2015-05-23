@@ -2,8 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <base href="/" />
-    <link href="dist/app.css" rel="stylesheet" />
+    <link href="app.css" rel="stylesheet" />
 </head>
 <body aurelia-app="ui/app/app-config">
     <div id="app">
@@ -12,10 +11,6 @@
         <script src="jspm_packages/system.js"></script>
         <script src="config.js"></script>
         <script>
-			System.config(
-			{
-				"paths": {"*" : "dist/*.js"}	
-			});
             System.import("aurelia-bootstrapper");
         </script>
     </div>
