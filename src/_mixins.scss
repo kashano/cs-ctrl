@@ -1,0 +1,13 @@
+﻿@mixin user-select($val) 
+{
+  -webkit-user-select: $val;
+     -moz-user-select: $val;
+      -ms-user-select: $val;
+          user-select: $val;
+}
+
+@mixin animation($name, $duration, $timingFunc, $interationCount)
+{
+    -webkit-animation:$name $duration $timingFunc $interationCount;
+    animation:$name $duration $timingFunc $interationCount;
+}

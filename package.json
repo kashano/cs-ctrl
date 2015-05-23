@@ -1,0 +1,31 @@
+{
+  "jspm": {
+    "directories": {},
+    "dependencies": {
+      "aurelia-bootstrapper": "github:aurelia/bootstrapper@0.12.0",
+      "aurelia-framework": "github:aurelia/framework@0.11.0",
+      "aurelia-loader-default": "github:aurelia/loader-default@0.7.0"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.1.11",
+      "babel-runtime": "npm:babel-runtime@^5.1.11",
+      "core-js": "npm:core-js@^0.8.4"
+    }
+  },
+  "devDependencies": {
+    "del": "^1.2.0",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-changed": "^1.2.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-jshint": "^1.11.0",
+    "gulp-minify-css": "^1.1.1",
+    "gulp-plumber": "^1.0.1",
+    "gulp-sass": "^2.0.1",
+    "gulp-sourcemaps": "^1.5.2",
+    "jshint-stylish": "^1.0.2",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.1.0",
+    "vinyl-paths": "^1.0.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "esnext": true,
+
+  "globals": {
+    "Promise": true,
+    "System": true
+  }
+}
