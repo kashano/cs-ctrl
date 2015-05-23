@@ -21,7 +21,7 @@ System.register([], function (_export) {
                         this.router = router;
 
                         config.title = 'cs-ctrl';
-                        config.options.pushState = true;
+
                         config.map([{ route: ['', 'home'], moduleId: '../home/home', title: 'Home' }]);
                     }
                 }]);
