@@ -1,6 +1,6 @@
 CS-CTRL
 ===================
-This project contains some drafts of Aurelia controls
+This project contains some drafts of Aurelia custom elements
 
 
 Installation
