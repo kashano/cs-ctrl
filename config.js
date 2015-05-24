@@ -19,7 +19,7 @@ System.config({
     "aurelia-loader-default": "github:aurelia/loader-default@0.7.0",
     "babel": "npm:babel-core@5.4.7",
     "babel-runtime": "npm:babel-runtime@5.4.7",
-    "core-js": "npm:core-js@0.8.4",
+    "core-js": "npm:core-js@0.9.12",
     "github:aurelia/binding@0.6.1": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.7.1",
       "aurelia-metadata": "github:aurelia/metadata@0.5.0",
