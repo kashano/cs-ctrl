@@ -8,6 +8,6 @@ module.exports =
     html   : srcRoot + '**/*.html',
     style  : srcRoot + '**/*.scss',
     deploy : ['./dist/**/*'],
-    clean  : ['./dist/**/*', '!./dist/jspm_packages', '!./dist/jspm_packages/**/*', '!./dist/config.js'],
+    clean  : ['./dist/**/*', '!./dist/jspm_packages/', '!./dist/jspm_packages/**/*', '!./dist/config.js'],
     output : 'dist/'
 };
