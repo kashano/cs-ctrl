@@ -1,0 +1,1 @@
+{"version":3,"sources":["ui/menu/menu.js"],"names":[],"mappings":";;;QAAa,IAAI;;;;;;;AAAJ,gBAAI,YAAJ,IAAI;sCAAJ,IAAI;;;4BAAJ,IAAI","file":"ui/menu/menu.js","sourcesContent":["export class Menu\r\n{\r\n    \r\n}"],"sourceRoot":"/source/"}

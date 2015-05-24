@@ -1,3 +1,7 @@
 <template>
+    <nav id="app-nav">   
+        <a repeat.for="nav of router.navigation" class="${nav.isActive ? 'act' : ''}" href.bind="nav.href">${nav.title}</a>
+    </nav>
+    
     <router-view id="app-router"></router-view>
 </template>

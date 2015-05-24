@@ -1,0 +1,1 @@
+{"version":3,"sources":["ui/welcome/welcome.js"],"names":[],"mappings":";;;MAAa,OAAO;;;;;;;AAAP,aAAO,YAAP,OAAO;8BAAP,OAAO;;;yBAAP,OAAO","file":"ui/welcome/welcome.js","sourcesContent":["export class Welcome\r\n{\r\n\r\n}"],"sourceRoot":"/source/"}
