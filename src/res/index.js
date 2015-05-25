@@ -1,7 +1,6 @@
 export function configure(aurelia)
 {
-    aurelia.globalizeResources([                    //Register resources globally
-                                'res/select/cs-select'
+    aurelia.globalizeResources(['res/select/cs-select',                    //Register resources globally
+                                'res/mselect/cs-mselect'
                                ]);
 }
-
