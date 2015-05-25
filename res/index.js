@@ -4,7 +4,7 @@ System.register([], function (_export) {
     _export('configure', configure);
 
     function configure(aurelia) {
-        aurelia.globalizeResources(['res/select/cs-select']);
+        aurelia.globalizeResources(['res/select/cs-select', 'res/mselect/cs-mselect']);
     }
 
     return {
