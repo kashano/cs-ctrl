@@ -17,7 +17,7 @@ export class Mselect
         [
             {id: 1, text: "Baseball"},
             {id: 2, text: "Basketball"},
-            {id: 3, text: "Gold"},
+            {id: 3, text: "Golf"},
             {id: 4, text: "Football"},
             {id: 5, text: "Soccer"},
             {id: 6, text: "Tennis"},
