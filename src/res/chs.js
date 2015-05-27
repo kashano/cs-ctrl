@@ -1,4 +1,20 @@
-﻿//Common keycodes
+﻿//Find matches function supported by browser
+function getMatchFn()
+{
+    var arrMatch = ['matches','msMatchesSelector'];
+    for(var i = 0; i < arrMatch.length; i++)
+    {
+        if (typeof document.body[arrMatch[i]] == 'function') 
+        {
+            return arrMatch[i];
+        }
+    }
+}
+var _matchesFn = getMatchFn();
+
+
+
+//Common keycodes
 export var keyCode =
 {
     BACKSPACE: 8,
@@ -147,26 +163,11 @@ if (!isFunc(Array.prototype.chsRemoveWithProperty))
 //---------------------------------------------------------------------------------
 export function closest(el, selector) 
 {
-    var matchesFn;
-
-    //Find match function supported by browser
-    var arrMatch = ['matches','webkitMatchesSelector','mozMatchesSelector','msMatchesSelector','oMatchesSelector'];
-    for(var i = 0; i < arrMatch.length; i++)
-    {
-        if (typeof document.body[arrMatch[i]] == 'function') 
-        {
-            matchesFn = arrMatch[i];
-            break;
-        }
-    }
-
-
-    //Starting w/ the given element, traverse up thru parents for a selctor match
+    //Starting w/ the given element, traverse up thru parents for a selector match
     var testEl = el;
     while (testEl !== null) 
     {
-        if (testEl[matchesFn](selector)) { return testEl; }
-        
+        if (testEl[_matchesFn](selector)) { return testEl; }
         testEl = testEl.parentElement;
     }
 

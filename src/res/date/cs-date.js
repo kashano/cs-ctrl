@@ -36,6 +36,9 @@ export class CsDate
         var self = this, el = self.element;
         self.ops = chs.extend({}, CsDate.defaultOps);
         
+        el.classList.add("cs-date");
+        el.classList.add("cs-ctrl");
+        
         //Set options from attributes
         self.ops.format   = el.getAttribute("format") || self.ops.format;
         self.ops.required = el.hasAttribute("required");

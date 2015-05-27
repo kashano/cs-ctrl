@@ -25,23 +25,34 @@ export class CalendarPopup
             if(tEl) { return;}      
            
             tEl = chs.closest(target, ".cs-date");              //If mousedown on cs-date ctrl
-            if(tEl)           
-            {
-                self.curCtrl = tEl.parentNode.primaryBehavior.executionContext;
-                self.show();
-                return;
-            }
+            if(tEl) { return; }           
+            
             self.hide();
         });
 
         doc.addEventListener('mouseup', (ev) =>
         {
             var target = ev.target;
-            var tEl    = chs.closest(target, ".cs-cal-prev");      //Prev button
+            var tEl    = chs.closest(target, ".cs-date-btn");      //Show calendar button of a ctrl
+            if(tEl) 
+            {
+                self.curCtrl = tEl.parentNode.primaryBehavior.executionContext;
+                self.show();
+                return;
+            }
+            
+            tEl = chs.closest(target, ".cs-cal-prev");             //Prev button on calendar
             if(tEl) { return self.changeMonth(-1); }
 
-            tEl = chs.closest(target, ".cs-cal-next");             //Next button
-            if(tEl) { self.changeMonth(1); }
+            tEl = chs.closest(target, ".cs-cal-next");             //Next button on calendar
+            if(tEl) { return self.changeMonth(1); }
+            
+            tEl = chs.closest(target, ".cs-cal-cell-content");     //Calendar day cell
+            if(tEl) 
+            { 
+                self.curCtrl.value = new Date(self.lastDt.getFullYear(), self.lastDt.getMonth(), tEl.innerText);
+                return self.hide();
+            }
         });
 
     }
@@ -73,9 +84,9 @@ export class CalendarPopup
 
     render(dt)
     {
-        var self = this, ctrl = self.curCtrl;
+        var self = this, ctrl = self.curCtrl, ctrlDt = ctrl.value;
 
-        var dt = dt || ctrl.value || new Date();
+        var dt = dt || ctrlDt || new Date();
         dt = new Date(dt.getTime());                     //Ensure we work with a clone if using the ctrl's date
 
         var month       = dt.getMonth();
@@ -84,7 +95,7 @@ export class CalendarPopup
         var startDay    = firstDayDt.getDay();           //That day's day number (0-6)
         var todayDt     = new Date();
         var today       = -1;                            //Today's day number. -1 if today's date doesn't fall within the calendar month we are rendering.
-
+        var activeDay   = -1;                            //Day number of the currently selected date. -1 if one doesn't exist within the calendar month we are rendering.
 
         //Record that this was the last date we rendered with
         self.lastDt = dt;
@@ -103,6 +114,12 @@ export class CalendarPopup
         if(month == todayDt.getMonth() && year == todayDt.getFullYear())
         {
             today = todayDt.getDate();
+        }
+        
+        //Determine if the month we're rendering includes the currently selected date
+        if(ctrlDt && month == ctrlDt.getMonth() && year == ctrlDt.getFullYear())
+        {
+            activeDay = ctrlDt.getDate();
         }
         
         var html = `<div class='cs-cal-hdr'>
@@ -131,11 +148,15 @@ export class CalendarPopup
                 {
                     if(dayCount == today)                                                                             //Today's date cell
                     {
-                        html += "<td class='cs-cal-cell'><a class='cs-cal-cell-content cs-today'>" + dayCount + "</a></td>"; 
+                        html += "<td class='cs-cal-cell'><div class='cs-cal-cell-content cs-today'>" + dayCount + "</div></td>"; 
+                    }
+                    else if(dayCount == activeDay)                                                                    //Currently selected date
+                    {
+                        html += "<td class='cs-cal-cell cs-active'><div class='cs-cal-cell-content'>" + dayCount + "</div></td>"; 
                     }
                     else                                                                                              //Normal date cell
                     {
-                        html += "<td class='cs-cal-cell'><a class='cs-cal-cell-content'>" + dayCount + "</a></td>"; 
+                        html += "<td class='cs-cal-cell'><div class='cs-cal-cell-content'>" + dayCount + "</div></td>"; 
                     }
                     dayCount++;
                 }
