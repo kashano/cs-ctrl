@@ -121,7 +121,7 @@ export class CsSelect
 
 
 
-    //Propety change handlers
+    //Binding change handlers
     //-------------------------------------------------------------------------------------------------------------------------------------------
     disabledChanged(newVal)
     {

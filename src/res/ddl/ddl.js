@@ -44,7 +44,7 @@ export class DDL
         //Wire document events
         doc.addEventListener('wheel', (evt) =>
         {
-            if(!chs.closest(evt.target, ".cs-ddl"))  //Iff scrolling isn't on the DDL, close it
+            if(!chs.closest(evt.target, ".cs-ddl"))  //If scrolling isn't on the DDL, close it
             {
                 this.hideDDL();
             }
@@ -135,7 +135,7 @@ export class DDL
             ctrlPos     = chs.jqOffset(ctrlEl),         //Coordinates relative to the document
             borderTop   = false,                        //DDL will either have a top or bottom border. (Depending on if it's positioned above or below the ctrl)
             ddl         = this.ddlEl,                   //The DDL element
-            ctrlHeight  = ctrlEl.offsetHeight,          //Height the contrll we're attached to
+            ctrlHeight  = ctrlEl.offsetHeight,          //Height of the control we're attached to
             y           = ctrlPos.top + ctrlHeight,     //Y position directly below ctrl
             wh          = window.innerHeight,           //Height of the browser viewport including, if rendered, the horizontal scrollbar
             topSpace    = ctrlPos.top,                  //Space available above ctrl

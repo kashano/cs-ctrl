@@ -1,4 +1,6 @@
-﻿//Hides an element
+﻿@import "_mixins.scss";
+
+//Hides an element
 //----------------------------------------------------------------------
 .cs-hidden
 {
@@ -6,4 +8,13 @@
     position   : absolute !important;
     top        : -9999px !important;
     left       : -9999px !important;
+}
+
+
+//A control
+//----------------------------------------------------------------------
+.cs-ctrl
+{
+    box-sizing: border-box;
+    @include user-select(none);
 }
