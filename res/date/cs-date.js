@@ -84,6 +84,9 @@ System.register(['aurelia-framework', './calendar-popup', '../chs'], function (_
                             el = self.element;
                         self.ops = chs.extend({}, CsDate.defaultOps);
 
+                        el.classList.add('cs-date');
+                        el.classList.add('cs-ctrl');
+
                         self.ops.format = el.getAttribute('format') || self.ops.format;
                         self.ops.required = el.hasAttribute('required');
 

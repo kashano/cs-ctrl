@@ -1,7 +1,7 @@
 System.register([], function (_export) {
     'use strict';
 
-    var keyCode;
+    var _matchesFn, keyCode;
 
     _export('encodeHtml', encodeHtml);
 
@@ -18,6 +18,15 @@ System.register([], function (_export) {
     _export('extend', extend);
 
     _export('getSiblings', getSiblings);
+
+    function getMatchFn() {
+        var arrMatch = ['matches', 'msMatchesSelector'];
+        for (var i = 0; i < arrMatch.length; i++) {
+            if (typeof document.body[arrMatch[i]] == 'function') {
+                return arrMatch[i];
+            }
+        }
+    }
 
     function encodeHtml(txt) {
         return txt.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -63,22 +72,11 @@ System.register([], function (_export) {
     }
 
     function closest(el, selector) {
-        var matchesFn;
-
-        var arrMatch = ['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'];
-        for (var i = 0; i < arrMatch.length; i++) {
-            if (typeof document.body[arrMatch[i]] == 'function') {
-                matchesFn = arrMatch[i];
-                break;
-            }
-        }
-
         var testEl = el;
         while (testEl !== null) {
-            if (testEl[matchesFn](selector)) {
+            if (testEl[_matchesFn](selector)) {
                 return testEl;
             }
-
             testEl = testEl.parentElement;
         }
 
@@ -132,6 +130,7 @@ System.register([], function (_export) {
     return {
         setters: [],
         execute: function () {
+            _matchesFn = getMatchFn();
             keyCode = {
                 BACKSPACE: 8,
                 DELETE: 46,

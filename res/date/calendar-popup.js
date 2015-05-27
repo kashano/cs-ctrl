@@ -34,23 +34,35 @@ System.register(['../chs'], function (_export) {
 
                         tEl = chs.closest(target, '.cs-date');
                         if (tEl) {
-                            self.curCtrl = tEl.parentNode.primaryBehavior.executionContext;
-                            self.show();
                             return;
                         }
+
                         self.hide();
                     });
 
                     doc.addEventListener('mouseup', function (ev) {
                         var target = ev.target;
-                        var tEl = chs.closest(target, '.cs-cal-prev');
+                        var tEl = chs.closest(target, '.cs-date-btn');
+                        if (tEl) {
+                            self.curCtrl = tEl.parentNode.primaryBehavior.executionContext;
+                            self.show();
+                            return;
+                        }
+
+                        tEl = chs.closest(target, '.cs-cal-prev');
                         if (tEl) {
                             return self.changeMonth(-1);
                         }
 
                         tEl = chs.closest(target, '.cs-cal-next');
                         if (tEl) {
-                            self.changeMonth(1);
+                            return self.changeMonth(1);
+                        }
+
+                        tEl = chs.closest(target, '.cs-cal-cell-content');
+                        if (tEl) {
+                            self.curCtrl.value = new Date(self.lastDt.getFullYear(), self.lastDt.getMonth(), tEl.innerText);
+                            return self.hide();
                         }
                     });
                 }
@@ -80,9 +92,10 @@ System.register(['../chs'], function (_export) {
                     key: 'render',
                     value: function render(dt) {
                         var self = this,
-                            ctrl = self.curCtrl;
+                            ctrl = self.curCtrl,
+                            ctrlDt = ctrl.value;
 
-                        var dt = dt || ctrl.value || new Date();
+                        var dt = dt || ctrlDt || new Date();
                         dt = new Date(dt.getTime());
 
                         var month = dt.getMonth();
@@ -91,6 +104,7 @@ System.register(['../chs'], function (_export) {
                         var startDay = firstDayDt.getDay();
                         var todayDt = new Date();
                         var today = -1;
+                        var activeDay = -1;
                         self.lastDt = dt;
 
                         dt = new Date(year, month + 1, 0);
@@ -98,6 +112,10 @@ System.register(['../chs'], function (_export) {
 
                         if (month == todayDt.getMonth() && year == todayDt.getFullYear()) {
                             today = todayDt.getDate();
+                        }
+
+                        if (ctrlDt && month == ctrlDt.getMonth() && year == ctrlDt.getFullYear()) {
+                            activeDay = ctrlDt.getDate();
                         }
 
                         var html = '<div class=\'cs-cal-hdr\'>\n                        <a class=\'cs-cal-prev\'><i class=\'cs-cal-prev-ico\'></i></a>\n                        <div class=\'cs-cal-title\'>' + MonthName[month] + ' ' + year + '</div>\n                        <a class=\'cs-cal-next\'><i class=\'cs-cal-next-ico\'></i></a>\n                    </div>\n                    <table class=\'cs-cal-tbl\'>\n                        <tr class=\'cs-cal-dayrow\'>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>Su</span></th>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>Mo</span></th>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>Tu</span></th>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>We</span></th>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>Th</span></th>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>Fr</span></th>\n                          <th class=\'cs-cal-daycell\'><span class=\'cs-cal-daylbl\'>Sa</span></th>\n                        </tr><tr>';
@@ -109,9 +127,11 @@ System.register(['../chs'], function (_export) {
                             for (d = 0; d < 7; d++) {
                                 if (dayCount <= daysInMonth && (w > 0 || d >= startDay)) {
                                         if (dayCount == today) {
-                                                html += '<td class=\'cs-cal-cell\'><a class=\'cs-cal-cell-content cs-today\'>' + dayCount + '</a></td>';
+                                                html += '<td class=\'cs-cal-cell\'><div class=\'cs-cal-cell-content cs-today\'>' + dayCount + '</div></td>';
+                                            } else if (dayCount == activeDay) {
+                                                html += '<td class=\'cs-cal-cell cs-active\'><div class=\'cs-cal-cell-content\'>' + dayCount + '</div></td>';
                                             } else {
-                                                html += '<td class=\'cs-cal-cell\'><a class=\'cs-cal-cell-content\'>' + dayCount + '</a></td>';
+                                                html += '<td class=\'cs-cal-cell\'><div class=\'cs-cal-cell-content\'>' + dayCount + '</div></td>';
                                             }
                                         dayCount++;
                                     } else {
