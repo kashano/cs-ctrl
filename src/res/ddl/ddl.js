@@ -40,47 +40,61 @@ export class DDL
         
         doc.body.appendChild(this.ddlEl);
 
+        //Wire permanent input events
+        this.inputEl.addEventListener('keydown', (e) => this.onInputKeyDown(e));
+        this.inputEl.addEventListener('keyup',   (e) => this.onInputKeyUp(e));
+    }
+    
+    wireDocEvents()
+    {
+        var self = this, ddlEl = self.ddlEl;
         
-        //Wire document events
-        doc.addEventListener('wheel', (evt) =>
+        if(self.wheelHandler) { return; }   //Don't allow multiple sets of event handlers
+        
+        //Wheel
+        self.wheelHandler = function(ev)
         {
-            if(!chs.closest(evt.target, ".cs-ddl"))  //If scrolling isn't on the DDL, close it
+            if(!ddlEl.contains(ev.target))  //If scrolling isn't on the DDL, close it
             {
-                this.hideDDL();
+                self.hideDDL();
             }
-        });
-
-
-        doc.addEventListener('mousedown', (evt) =>
+        };
+          
+        
+        //Mouse down
+        self.mousedownHandler = function(ev)
         {
-            if (!this.curCtrl) { return; }
-
-            var ctrlEl = this.curCtrl.element, target = evt.target;
+            var ctrlEl = self.curCtrl.element, target = ev.target;
 
             if (ctrlEl.contains(target))                           //If click was on the active control
             {
-                if (this.curCtrl.disabled) { this.hideDDL();    }  //If click was on a disabled ctrl close DDL on any previously opened ctrl
-                else                       { this.focusInput(); }
+                self.focusInput();
             }
-            else if (this.ddlEl.contains(target))                  //If click was on the DDL
+            else if (ddlEl.contains(target))                       //If click was on the DDL
             {
                 var clickedResult = chs.closest(target, "." + ResultClass);
                 if (clickedResult)
                 {
-                    this.resultsEl.querySelector("." + FocusClass).classList.remove(FocusClass);   //Clear prev selected result
+                    self.resultsEl.querySelector("." + FocusClass).classList.remove(FocusClass);   //Clear prev selected result
                     clickedResult.classList.add(FocusClass);                                       //Select clicked result
-                    this.addSelectedResult();
+                    self.addSelectedResult();
                 }
-                else { this.focusInput(); }
-                
+                else { self.focusInput(); }
             }
-            else { this.hideDDL(); }                               //Otherwise, close DDL
-        });
+            else { self.hideDDL(); }                               //Otherwise, close DDL
+        };
         
-
-        //Wire input events
-        this.inputEl.addEventListener('keydown', (e) => this.onInputKeyDown(e));
-        this.inputEl.addEventListener('keyup',   (e) => this.onInputKeyUp(e));
+        document.addEventListener('wheel', self.wheelHandler);
+        document.addEventListener('mousedown', self.mousedownHandler);
+    }
+    
+    removeDocEvents()
+    {
+        var self = this;
+        document.removeEventListener('wheel', self.wheelHandler);
+        document.removeEventListener('mousedown', self.mousedownHandler);
+        self.wheelHandler     = null;
+        self.mousedownHandler = null;
     }
 
     open(ctrl)
@@ -121,12 +135,14 @@ export class DDL
         this.positionDDL();
         this.curCtrl.setOpenState(true);
         this.focusInput();
+        this.wireDocEvents();
     }
 
     hideDDL()
     {
         this.ddlEl.classList.add("cs-hidden");
         if (this.curCtrl) { this.curCtrl.setOpenState(false); }
+        this.removeDocEvents();
     }
 
     positionDDL()

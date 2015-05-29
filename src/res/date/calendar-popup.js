@@ -19,15 +19,18 @@ export class CalendarPopup
         self.element = document.createElement("div");
         self.element.className = 'cs-cal cs-hidden';
         document.body.appendChild(self.element);
-        
-        self.wireEvents();
     }
     
     wireEvents()
     {
-        document.addEventListener('mousedown', (ev) =>
+        var self = this;
+        
+        if(self.mousedownHandler) { return; }   //Don't allow multiple sets of event handlers
+        
+        //Mouse Down
+        self.mousedownHandler = function(ev)
         {
-            var self = this, target = ev.target;
+            var target = ev.target;
             
             //If mousedown on calendar
             if(self.element.contains(target)) { return; }           
@@ -36,11 +39,12 @@ export class CalendarPopup
             if(self.curCtrl && self.curCtrl.element.contains(target)) { return; }
             
             self.hide();
-        });
-
-        document.addEventListener('mouseup', (ev) =>
+        };
+        
+        //Mouse Up
+        self.mouseupHandler = function(ev)
         {
-            var self = this, cl = ev.target.classList;
+            var cl = ev.target.classList;
             
             if(cl.contains(PrevButtonCSS)) { return self.changeMonth(-1); }   //Prev button on calendar
             if(cl.contains(NextButtonCSS)) { return self.changeMonth(1);  }   //Next button on calendar
@@ -50,7 +54,19 @@ export class CalendarPopup
                 self.curCtrl.value = new Date(self.lastDt.getFullYear(), self.lastDt.getMonth(), ev.target.innerText);
                 return self.hide();
             }
-        });
+        };
+        
+        document.addEventListener('mousedown', self.mousedownHandler);
+        document.addEventListener('mouseup', self.mouseupHandler);
+    }
+    
+    removeEvents()
+    {
+        var self = this;
+        document.removeEventListener('mousedown', self.mousedownHandler);
+        document.removeEventListener('mouseup', self.mouseupHandler);
+        self.mousedownHandler = null;
+        self.mouseupHandler   = null;
     }
     
     hide()
@@ -59,6 +75,7 @@ export class CalendarPopup
         self.isOpen = false;
         self.lastDt = null;  //Clear out last so on next show we'll render from the ctrl's date
         self.element.classList.add("cs-hidden");
+        self.removeEvents();
     }
     
     show(ctrl)
@@ -69,6 +86,7 @@ export class CalendarPopup
         self.render();
         self.position();
         self.element.classList.remove("cs-hidden");
+        self.wireEvents();
     }
 
 
@@ -93,8 +111,8 @@ export class CalendarPopup
         var month       = dt.getMonth();
         var year        = dt.getFullYear();
         var firstDayDt  = new Date(year, month, 1);      //1st date of the month
-        var startDay    = firstDayDt.getDay();           //That day's day number (0-6)
-        var todayDt     = new Date();
+        var startDay    = firstDayDt.getDay();           //That date's day number (0-6)
+        var todayDt     = new Date();                    //Today's date
         var today       = -1;                            //Today's day number. -1 if today's date doesn't fall within the calendar month we are rendering.
         var activeDay   = -1;                            //Day number of the currently selected date. -1 if one doesn't exist within the calendar month we are rendering.
 
@@ -184,7 +202,7 @@ export class CalendarPopup
             
 
         //Set cal left position
-        cal.style.left   = ctrlPos.left + 'px';
+        cal.style.left = ctrlPos.left + 'px';
        
         //If cal would extend beyond the window assume it's better to show above the control *IF* topSpace has more room
         if ((y + cal.offsetHeight) > wh) 
