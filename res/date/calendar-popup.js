@@ -26,18 +26,18 @@ System.register(['../chs'], function (_export) {
                     self.element = document.createElement('div');
                     self.element.className = 'cs-cal cs-hidden';
                     document.body.appendChild(self.element);
-
-                    self.wireEvents();
                 }
 
                 _createClass(CalendarPopup, [{
                     key: 'wireEvents',
                     value: function wireEvents() {
-                        var _this = this;
+                        var self = this;
 
-                        document.addEventListener('mousedown', function (ev) {
-                            var self = _this,
-                                target = ev.target;
+                        if (self.mousedownHandler) {
+                            return;
+                        }
+                        self.mousedownHandler = function (ev) {
+                            var target = ev.target;
 
                             if (self.element.contains(target)) {
                                 return;
@@ -48,11 +48,10 @@ System.register(['../chs'], function (_export) {
                             }
 
                             self.hide();
-                        });
+                        };
 
-                        document.addEventListener('mouseup', function (ev) {
-                            var self = _this,
-                                cl = ev.target.classList;
+                        self.mouseupHandler = function (ev) {
+                            var cl = ev.target.classList;
 
                             if (cl.contains(PrevButtonCSS)) {
                                 return self.changeMonth(-1);
@@ -65,7 +64,19 @@ System.register(['../chs'], function (_export) {
                                     self.curCtrl.value = new Date(self.lastDt.getFullYear(), self.lastDt.getMonth(), ev.target.innerText);
                                     return self.hide();
                                 }
-                        });
+                        };
+
+                        document.addEventListener('mousedown', self.mousedownHandler);
+                        document.addEventListener('mouseup', self.mouseupHandler);
+                    }
+                }, {
+                    key: 'removeEvents',
+                    value: function removeEvents() {
+                        var self = this;
+                        document.removeEventListener('mousedown', self.mousedownHandler);
+                        document.removeEventListener('mouseup', self.mouseupHandler);
+                        self.mousedownHandler = null;
+                        self.mouseupHandler = null;
                     }
                 }, {
                     key: 'hide',
@@ -74,6 +85,7 @@ System.register(['../chs'], function (_export) {
                         self.isOpen = false;
                         self.lastDt = null;
                         self.element.classList.add('cs-hidden');
+                        self.removeEvents();
                     }
                 }, {
                     key: 'show',
@@ -86,6 +98,7 @@ System.register(['../chs'], function (_export) {
                         self.render();
                         self.position();
                         self.element.classList.remove('cs-hidden');
+                        self.wireEvents();
                     }
                 }, {
                     key: 'changeMonth',

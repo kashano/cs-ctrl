@@ -69,40 +69,6 @@ System.register(["../chs"], function (_export) {
 
                     doc.body.appendChild(this.ddlEl);
 
-                    doc.addEventListener("wheel", function (evt) {
-                        if (!chs.closest(evt.target, ".cs-ddl")) {
-                                _this.hideDDL();
-                            }
-                    });
-
-                    doc.addEventListener("mousedown", function (evt) {
-                        if (!_this.curCtrl) {
-                            return;
-                        }
-
-                        var ctrlEl = _this.curCtrl.element,
-                            target = evt.target;
-
-                        if (ctrlEl.contains(target)) {
-                                if (_this.curCtrl.disabled) {
-                                    _this.hideDDL();
-                                } else {
-                                    _this.focusInput();
-                                }
-                            } else if (_this.ddlEl.contains(target)) {
-                                var clickedResult = chs.closest(target, "." + ResultClass);
-                                if (clickedResult) {
-                                    _this.resultsEl.querySelector("." + FocusClass).classList.remove(FocusClass);
-                                    clickedResult.classList.add(FocusClass);
-                                    _this.addSelectedResult();
-                                } else {
-                                    _this.focusInput();
-                                }
-                            } else {
-                            _this.hideDDL();
-                        }
-                    });
-
                     this.inputEl.addEventListener("keydown", function (e) {
                         return _this.onInputKeyDown(e);
                     });
@@ -112,6 +78,53 @@ System.register(["../chs"], function (_export) {
                 }
 
                 _createClass(DDL, [{
+                    key: "wireDocEvents",
+                    value: function wireDocEvents() {
+                        var self = this,
+                            ddlEl = self.ddlEl;
+
+                        if (self.wheelHandler) {
+                            return;
+                        }
+                        self.wheelHandler = function (ev) {
+                            if (!ddlEl.contains(ev.target)) {
+                                    self.hideDDL();
+                                }
+                        };
+
+                        self.mousedownHandler = function (ev) {
+                            var ctrlEl = self.curCtrl.element,
+                                target = ev.target;
+
+                            if (ctrlEl.contains(target)) {
+                                    self.focusInput();
+                                } else if (ddlEl.contains(target)) {
+                                    var clickedResult = chs.closest(target, "." + ResultClass);
+                                    if (clickedResult) {
+                                        self.resultsEl.querySelector("." + FocusClass).classList.remove(FocusClass);
+                                        clickedResult.classList.add(FocusClass);
+                                        self.addSelectedResult();
+                                    } else {
+                                        self.focusInput();
+                                    }
+                                } else {
+                                self.hideDDL();
+                            }
+                        };
+
+                        document.addEventListener("wheel", self.wheelHandler);
+                        document.addEventListener("mousedown", self.mousedownHandler);
+                    }
+                }, {
+                    key: "removeDocEvents",
+                    value: function removeDocEvents() {
+                        var self = this;
+                        document.removeEventListener("wheel", self.wheelHandler);
+                        document.removeEventListener("mousedown", self.mousedownHandler);
+                        self.wheelHandler = null;
+                        self.mousedownHandler = null;
+                    }
+                }, {
                     key: "open",
                     value: function open(ctrl) {
                         if (ctrl !== this.curCtrl) {
@@ -153,6 +166,7 @@ System.register(["../chs"], function (_export) {
                         this.positionDDL();
                         this.curCtrl.setOpenState(true);
                         this.focusInput();
+                        this.wireDocEvents();
                     }
                 }, {
                     key: "hideDDL",
@@ -161,6 +175,7 @@ System.register(["../chs"], function (_export) {
                         if (this.curCtrl) {
                             this.curCtrl.setOpenState(false);
                         }
+                        this.removeDocEvents();
                     }
                 }, {
                     key: "positionDDL",
