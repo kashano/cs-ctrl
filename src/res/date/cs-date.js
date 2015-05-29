@@ -95,6 +95,14 @@ export class CsDate
         var dt = parseDateStr(txt, self.ops.format);
         if(dt) { self.value = dt; }
     }
+    
+    showCalendar()
+    {
+        var self = this, cal = self.calendar;
+        if(cal.curCtrl == self && cal.isOpen) { cal.hide(); return; }  //If calendar was already showing for this ctrl, toggle it off
+        
+        cal.show(self);
+    }
 }
 
 

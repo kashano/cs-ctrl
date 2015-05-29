@@ -2,72 +2,73 @@ import * as chs from '../chs';
 
 var MonthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+var PrevButtonCSS  = 'cs-cal-prev',
+    NextButtonCSS  = 'cs-cal-next',
+    CellContentCSS = 'cs-cal-cell-content';
 
-//Singleton datepicker popup for cs-date
+//Singleton calendar (datepicker) popup for cs-date
 //----------------------------------------------------------------------------------------
 export class CalendarPopup
 {
     constructor()
     {
-        var self = this, doc = document;
+        var self = this;
         self.curCtrl = null;               //Stores a reference to the current cs-date ctrl this calendar is working with
         
         //Append a <div class='cs-cal'> element to the document body.
-        self.element = doc.createElement("div");
+        self.element = document.createElement("div");
         self.element.className = 'cs-cal cs-hidden';
-        doc.body.appendChild(self.element);
+        document.body.appendChild(self.element);
         
-        //Wire document events
-        doc.addEventListener('mousedown', (ev) =>
+        self.wireEvents();
+    }
+    
+    wireEvents()
+    {
+        document.addEventListener('mousedown', (ev) =>
         {
-            var target = ev.target;
-            var tEl = chs.closest(target, ".cs-cal");           //If mousedown on calendar
-            if(tEl) { return;}      
-           
-            tEl = chs.closest(target, ".cs-date");              //If mousedown on cs-date ctrl
-            if(tEl) { return; }           
+            var self = this, target = ev.target;
+            
+            //If mousedown on calendar
+            if(self.element.contains(target)) { return; }           
+            
+            //If mousedown on current cs-date ctrl
+            if(self.curCtrl && self.curCtrl.element.contains(target)) { return; }
             
             self.hide();
         });
 
-        doc.addEventListener('mouseup', (ev) =>
+        document.addEventListener('mouseup', (ev) =>
         {
-            var target = ev.target;
-            var tEl    = chs.closest(target, ".cs-date-btn");      //Show calendar button of a ctrl
-            if(tEl) 
-            {
-                self.curCtrl = tEl.parentNode.primaryBehavior.executionContext;
-                self.show();
-                return;
-            }
+            var self = this, cl = ev.target.classList;
             
-            tEl = chs.closest(target, ".cs-cal-prev");             //Prev button on calendar
-            if(tEl) { return self.changeMonth(-1); }
+            if(cl.contains(PrevButtonCSS)) { return self.changeMonth(-1); }   //Prev button on calendar
+            if(cl.contains(NextButtonCSS)) { return self.changeMonth(1);  }   //Next button on calendar
 
-            tEl = chs.closest(target, ".cs-cal-next");             //Next button on calendar
-            if(tEl) { return self.changeMonth(1); }
-            
-            tEl = chs.closest(target, ".cs-cal-cell-content");     //Calendar day cell
-            if(tEl) 
-            { 
-                self.curCtrl.value = new Date(self.lastDt.getFullYear(), self.lastDt.getMonth(), tEl.innerText);
+            if(cl.contains(CellContentCSS))                                   //Calendar day cell
+            {
+                self.curCtrl.value = new Date(self.lastDt.getFullYear(), self.lastDt.getMonth(), ev.target.innerText);
                 return self.hide();
             }
         });
-
     }
     
     hide()
     {
-        this.element.classList.add("cs-hidden");
-        this.lastDt = null;  //Clear out last so on next show we'll render from the ctrl's date
+        var self    = this;
+        self.isOpen = false;
+        self.lastDt = null;  //Clear out last so on next show we'll render from the ctrl's date
+        self.element.classList.add("cs-hidden");
     }
     
-    show()
+    show(ctrl)
     {
-        this.render();
-        this.position();
-        this.element.classList.remove("cs-hidden");
+        var self    = this;
+        self.isOpen = true;
+        if(ctrl) { self.curCtrl = ctrl; }
+        self.render();
+        self.position();
+        self.element.classList.remove("cs-hidden");
     }
 
 
@@ -82,11 +83,11 @@ export class CalendarPopup
 
 
 
-    render(dt)
+    render(pDt)
     {
         var self = this, ctrl = self.curCtrl, ctrlDt = ctrl.value;
 
-        var dt = dt || ctrlDt || new Date();
+        var dt = pDt || ctrlDt || new Date();
         dt = new Date(dt.getTime());                     //Ensure we work with a clone if using the ctrl's date
 
         var month       = dt.getMonth();
@@ -123,9 +124,9 @@ export class CalendarPopup
         }
         
         var html = `<div class='cs-cal-hdr'>
-                        <a class='cs-cal-prev'><i class='cs-cal-prev-ico'></i></a>
+                        <a class='` + PrevButtonCSS + `'><i class='cs-cal-prev-ico'></i></a>
                         <div class='cs-cal-title'>` + MonthName[month] + ' ' + year + `</div>
-                        <a class='cs-cal-next'><i class='cs-cal-next-ico'></i></a>
+                        <a class='` + NextButtonCSS + `'><i class='cs-cal-next-ico'></i></a>
                     </div>
                     <table class='cs-cal-tbl'>
                         <tr class='cs-cal-dayrow'>
@@ -144,25 +145,22 @@ export class CalendarPopup
         {
             for (d = 0; d < 7; d++)  //Day loop (cells)
             {
-                if (dayCount <= daysInMonth && (w > 0 || d >= startDay))     //Fill the cell if we still have days left, & we're not on the 1st row, or this day is >= the starting day for the month
+                if (dayCount <= daysInMonth && (w > 0 || d >= startDay))       //Fill the cell if we still have days left, & we're not on the 1st row, or this day is >= the starting day for the month
                 {
-                    if(dayCount == today)                                                                             //Today's date cell
-                    {
-                        html += "<td class='cs-cal-cell'><div class='cs-cal-cell-content cs-today'>" + dayCount + "</div></td>"; 
-                    }
-                    else if(dayCount == activeDay)                                                                    //Currently selected date
-                    {
-                        html += "<td class='cs-cal-cell cs-active'><div class='cs-cal-cell-content'>" + dayCount + "</div></td>"; 
-                    }
-                    else                                                                                              //Normal date cell
-                    {
-                        html += "<td class='cs-cal-cell'><div class='cs-cal-cell-content'>" + dayCount + "</div></td>"; 
-                    }
+                    html += "<td class='cs-cal-cell";
+                    
+                    if(dayCount == activeDay) { html += " cs-active"; }        //Currently selected day
+                    
+                    html += "'><div class='cs-cal-cell-content";
+                    
+                    if(dayCount == today)  { html += " cs-today"; }            //Today's date cell
+                    
+                    html += "'>" + dayCount + "</div></td>"; 
                     dayCount++;
                 }
                 else
                 {
-                    html += '<td class="cs-cal-cell cs-cal-cell-blank"></td>';           //Empty cell
+                    html += '<td class="cs-cal-cell cs-cal-cell-blank"></td>'; //Empty cell
                 }
             }
             if(dayCount > daysInMonth) { break; }
@@ -188,7 +186,6 @@ export class CalendarPopup
         //Set cal left position
         cal.style.left   = ctrlPos.left + 'px';
        
-        
         //If cal would extend beyond the window assume it's better to show above the control *IF* topSpace has more room
         if ((y + cal.offsetHeight) > wh) 
         {
@@ -201,17 +198,5 @@ export class CalendarPopup
  
         //Set top position
         cal.style.top = y + 'px';
-        
-        //Assign top/bottom border
-//        if(borderTop)
-//        {
-//            ddl.style.borderTopStyle    = 'solid';
-//            ddl.style.borderBottomStyle = 'none';
-//        }
-//        else
-//        {
-//            ddl.style.borderBottomStyle = 'solid';
-//            ddl.style.borderTopStyle    = 'none';
-//        }
     }
 }
