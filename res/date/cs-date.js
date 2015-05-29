@@ -133,6 +133,17 @@ System.register(['aurelia-framework', './calendar-popup', '../chs'], function (_
                             self.value = dt;
                         }
                     }
+                }, {
+                    key: 'showCalendar',
+                    value: function showCalendar() {
+                        var self = this,
+                            cal = self.calendar;
+                        if (cal.curCtrl == self && cal.isOpen) {
+                            cal.hide();return;
+                        }
+
+                        cal.show(self);
+                    }
                 }], [{
                     key: 'defaultOps',
                     value: {
