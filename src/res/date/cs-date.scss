@@ -5,7 +5,23 @@
 //--------------------------------------------------------
 .cs-date
 {
+    overflow:hidden;
+    width:250px; height:24px;
+
+    position:relative;
+    display:inline-block;
     
+    border:solid 1px #aaa;  border-radius:2px;  outline:none;
+    
+    box-shadow:0 0 5px rgba(0,0,0,0), 0 0 3px rgba(0,0,0,.2) inset;
+    background:#FEFEFE;
+    
+    
+    &:hover    {border-color:#72B6ED; box-shadow:0 0 5px rgba(0,0,0,0), 0 0 3px rgba(0,0,0,.2) inset; }
+    &.focused  {border-color:#3C80E6; box-shadow:0 0 5px rgba(0,0,0,0), 0 0 3px rgba(0,0,0,.2) inset; }
+    &.disabled {background:transparent; opacity:.5;}
+
+    cursor:default;
 }
 
 
@@ -15,7 +31,11 @@
 {
     box-sizing: border-box;
     background:transparent; border:none; box-shadow:none; outline:none;
+    height:24px; vertical-align: top; padding-left: 4px;
+    font: 12px/12px Arial; color:#777;
 }
+.cs-date:hover   .cs-date-input { color:#444; }
+.cs-date.focused .cs-date-input { color:#444; }
 
 
 //Show calendar button
@@ -23,5 +43,5 @@
 .cs-date-btn
 {
     box-sizing: border-box;
-    width:40px; height:22px;
+    width:40px; height:22px; float: right;
 }

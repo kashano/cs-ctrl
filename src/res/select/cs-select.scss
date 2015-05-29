@@ -4,12 +4,10 @@
 //------------------------------------------------------------------------------------------
 .cs-select
 {
-    overflow:hidden;  
-
-    box-sizing: border-box; 
     width:250px; height:24px; 
     position:relative; 
     display:inline-block;
+    overflow:hidden;
 
     background: linear-gradient(#fff 0, #fff 45%, #fff 45%, #ccc 100%);
     box-shadow:0 0 3px rgba(0,0,0,.3);
@@ -22,7 +20,6 @@
     &.disabled {opacity:.5; border-color:#aaa; box-shadow:0 0 3px rgba(0,0,0,0);}
 
     cursor:default;
-    @include user-select(none);
 }
 
 

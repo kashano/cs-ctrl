@@ -18,7 +18,7 @@ export class CsDate
 {
     static defaultOps =
     {
-        format : "ISO"             //Format date strings are expected to be in. ISO=YYYY-MM-DD, USA=M/D/YYYY
+        format : "ISO"             //The format date strings are expected to be in. ISO=YYYY-MM-DD, USA=M/D/YYYY
     };
     
     static inject = [Element, CalendarPopup];
@@ -47,7 +47,7 @@ export class CsDate
     }
     unbind()
     {
-        console.log("Date unbound");
+        
     }
     
     
@@ -55,38 +55,18 @@ export class CsDate
     //-------------------------------------------------------------------------------------------------------------------------------------------
     valueChanged(newVal)
     {
-        console.log("Date value changed");
+        console.log("Date: value changed");
         this.updateInputValue();
     }
     
-   
     
-    //Event handlers
-    //-------------------------------------------------------------------------------------------------------------------------------------------
-    onInput()
-    {
-        console.log("Date inputValue changed");
-        var self = this, txt = self.inputValue;
-        
-        if(!txt)   //If input is blank, set date value to null
-        {
-            self.value = null;
-            return; 
-        } 
-        
-        //If date ented is valid, assign the new date value
-        var dt = parseDateStr(txt, self.ops.format);
-        if(dt) { self.value = dt; }
-    }
-    
-    
-    //
+    //Updates this.inputValue which is bound to the control's textbox
     updateInputValue()
     {
         var self = this, dt = self.value;
-        if(!self.value) { self.inputValue = ""; return; }
+        if(!dt) { self.inputValue = ""; return; }
         
-        if(this.ops.format == "ISO")
+        if(self.ops.format == "ISO")
         {
             self.inputValue = dt.getFullYear() + "-" + pad2(dt.getMonth() + 1) + "-" + pad2(dt.getDate());
         }
@@ -95,7 +75,26 @@ export class CsDate
             self.inputValue = (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
         }
     }
-  
+    
+   
+    
+    //Event handlers
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+    onInput()
+    {
+        console.log("Date: user changed inputValue");
+        var self = this, txt = self.inputValue;
+        
+        if(!txt)   //If input is blank, set date value to null
+        {
+            self.value = null;
+            return; 
+        } 
+        
+        //If date ented is valid, assign the new date value. If invalid, ignore the bogus input.
+        var dt = parseDateStr(txt, self.ops.format);
+        if(dt) { self.value = dt; }
+    }
 }
 
 
