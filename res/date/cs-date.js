@@ -94,19 +94,32 @@ System.register(['aurelia-framework', './calendar-popup', '../chs'], function (_
                     }
                 }, {
                     key: 'unbind',
-                    value: function unbind() {
-                        console.log('Date unbound');
-                    }
+                    value: function unbind() {}
                 }, {
                     key: 'valueChanged',
                     value: function valueChanged(newVal) {
-                        console.log('Date value changed');
+                        console.log('Date: value changed');
                         this.updateInputValue();
+                    }
+                }, {
+                    key: 'updateInputValue',
+                    value: function updateInputValue() {
+                        var self = this,
+                            dt = self.value;
+                        if (!dt) {
+                            self.inputValue = '';return;
+                        }
+
+                        if (self.ops.format == 'ISO') {
+                            self.inputValue = dt.getFullYear() + '-' + pad2(dt.getMonth() + 1) + '-' + pad2(dt.getDate());
+                        } else {
+                                self.inputValue = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear();
+                            }
                     }
                 }, {
                     key: 'onInput',
                     value: function onInput() {
-                        console.log('Date inputValue changed');
+                        console.log('Date: user changed inputValue');
                         var self = this,
                             txt = self.inputValue;
 
@@ -119,21 +132,6 @@ System.register(['aurelia-framework', './calendar-popup', '../chs'], function (_
                         if (dt) {
                             self.value = dt;
                         }
-                    }
-                }, {
-                    key: 'updateInputValue',
-                    value: function updateInputValue() {
-                        var self = this,
-                            dt = self.value;
-                        if (!self.value) {
-                            self.inputValue = '';return;
-                        }
-
-                        if (this.ops.format == 'ISO') {
-                            self.inputValue = dt.getFullYear() + '-' + pad2(dt.getMonth() + 1) + '-' + pad2(dt.getDate());
-                        } else {
-                                self.inputValue = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear();
-                            }
                     }
                 }], [{
                     key: 'defaultOps',
