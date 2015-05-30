@@ -132,12 +132,10 @@ System.register(["../chs"], function (_export) {
                                         this.curCtrl.setOpenState(false);
                                     }
                                 this.curCtrl = ctrl;
-                                this.clearDDL();
                             }
 
-                        if (!this.curCtrl.disabled) {
-                            this.queryIfAllowedAndEnsureDDLVisible();
-                        }
+                        this.clearDDL();
+                        this.queryIfAllowedAndEnsureDDLVisible();
                     }
                 }, {
                     key: "focusInput",
