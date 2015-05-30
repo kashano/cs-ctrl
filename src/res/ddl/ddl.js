@@ -106,10 +106,11 @@ export class DDL
                 this.curCtrl.setOpenState(false);
             }   
             this.curCtrl = ctrl;               //Switch to new ctrl
-            this.clearDDL();
+            
         }
         
-        if (!this.curCtrl.disabled) { this.queryIfAllowedAndEnsureDDLVisible(); }
+        this.clearDDL();
+        this.queryIfAllowedAndEnsureDDLVisible();
     }
 
     focusInput()

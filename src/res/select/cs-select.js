@@ -111,7 +111,7 @@ export class CsSelect
     {
         if (this.disabled) { return; }
 
-        if (evt.keyCode === chs.keyCode.UP || evt.keyCode === chs.keyCode.DOWN || chs.isAlphaNumericKey(evt.keyCode))
+        if (evt.keyCode === 38 || evt.keyCode === 40 || chs.isAlphaNumericKey(evt.keyCode))  //Up, Down, or alphanumeric key
         {
             this.ddl.open(this);
         }
