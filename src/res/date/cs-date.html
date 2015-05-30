@@ -1,4 +1,8 @@
 <template>
     <input class="cs-date-input" value.bind="inputValue" input.delegate="onInput()" maxlength="10" />
-    <button class="cs-date-btn" click.delegate="showCalendar()"></button>
+    <div class="cs-date-btn" click.delegate="showCalendar()">
+        <div class="cs-date-btn-ico">${dateNum}</div>
+    </div>
 </template>
+
+

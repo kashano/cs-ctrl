@@ -42,6 +42,40 @@
 //--------------------------------------------------------
 .cs-date-btn
 {
-    box-sizing: border-box;
-    width:40px; height:22px; float: right;
+    box-sizing: border-box; 
+    width:40px; height:22px; float: right;       
+    background: linear-gradient(#eee 0, #eee 40%, #CDCDCD 100%);
+    border-left: solid 1px #aaa;
+    
+    &:hover   { background: linear-gradient(#E6EEF6 0, #E0E9F4 40%, #B8CDE4 100%); border-color:#72B6ED; box-shadow:0 0 5px rgba(0,0,0,0), 0 0 3px rgba(0,0,0,.2);}
+    &:active  { box-shadow: 0 0 5px rgba(0,0,0,.2) inset; border-color:#5DAEF3;}
 }
+
+//Show calendar button calendar icon
+//--------------------------------------------------------
+.cs-date-btn-ico
+{
+    display:block; box-sizing: border-box; 
+    width:16px; height:16px;
+    background: linear-gradient(rgba(245,245,245,1), rgba(228,228,228,1));
+    
+    background:#FFF;
+    border-radius: 2px;
+    box-shadow: 0 2px 2px rgba(0,0,0,.45);
+    
+    font: 400 9px/12px Verdana; color:333;
+    text-align: center;
+    margin: 2px auto;
+}
+.cs-date-btn-ico::before  //Calendar header area
+{
+    content:'';
+    display: block;
+    height:4px;
+    
+    background: linear-gradient(rgba(228,167,167,1), rgba(168,52,54,1));
+    border-bottom: 1px solid #772524; 
+    border-radius: 2px 2px 0 0;
+    box-shadow: -1px 4px 6px rgba(0,0,0,.3);
+}
+.cs-date-btn:active .cs-date-btn-ico { position: relative; top:1px;  }

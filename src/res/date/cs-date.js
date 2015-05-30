@@ -1,7 +1,7 @@
 var MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 
-import {customElement, bindable, bindingMode} from 'aurelia-framework';
+import {customElement, bindable, bindingMode, computedFrom} from 'aurelia-framework';
 import {CalendarPopup} from './calendar-popup';
 import * as chs from '../chs';
 
@@ -28,6 +28,11 @@ export class CsDate
         this.calendar = calendar;
     }
     
+    @computedFrom('value')
+    get dateNum()  //Property used to display the month's date inside the "show calendar" button in the view
+    {
+        return this.value ? this.value.getDate() : '7';
+    }
     
     //Lifecycle hooks
     //-------------------------------------------------------------------------------------------------------------------------------------------
